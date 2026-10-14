@@ -1,0 +1,9 @@
+<!--
+  Fragmento a añadir en C:\Program Files (x86)\ossec-agent\ossec.conf
+  (Windows Server y Windows 11), dentro de <ossec_config>,
+  justo antes de la etiqueta de cierre </ossec_config>.
+-->
+<localfile>
+  <location>Microsoft-Windows-Sysmon/Operational</location>
+  <log_format>eventchannel</log_format>
+</localfile>

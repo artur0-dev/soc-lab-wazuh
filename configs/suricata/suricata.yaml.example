@@ -1,0 +1,41 @@
+%YAML 1.1
+---
+# Fragmento relevante de /etc/suricata/suricata.yaml
+# El resto del archivo es el generado por defecto al instalar Suricata 7.0.3.
+
+vars:
+  address-groups:
+    HOME_NET: "[192.168.58.0/24]"
+    EXTERNAL_NET: "!$HOME_NET"
+
+    HTTP_SERVERS: "$HOME_NET"
+    SSH_SERVERS: "$HOME_NET"
+
+  port-groups:
+    HTTP_PORTS: "80"
+    SHELLCODE_PORTS: "!80"
+    SSH_PORTS: 22
+
+af-packet:
+  - interface: ens37        # interfaz conectada a la red del laboratorio
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    checksum-checks: no     # necesario en VMware por el offloading de red
+
+default-rule-path: /var/lib/suricata/rules
+rule-files:
+  - suricata.rules
+  - local.rules             # ver detections/suricata-local.rules
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+        - dns
+        - http
+        - tls
+        - flow

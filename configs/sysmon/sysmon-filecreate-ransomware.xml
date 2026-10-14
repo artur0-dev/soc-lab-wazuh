@@ -1,0 +1,18 @@
+<!--
+  Fragmento a añadir en sysmonconfig.xml (dentro de <EventFiltering>)
+  para que Sysmon registre (Event ID 11) la creación de archivos .locked
+  del simulador de ransomware (UC05). La config de SwiftOnSecurity solo
+  registra FileCreate en rutas y extensiones concretas, y no en
+  Documents\*.locked.
+
+  Si tu config ya tiene un bloque <FileCreate onmatch="include">, añade
+  ahí las líneas <TargetFilename>; no crees un segundo bloque.
+
+  Recargar sin reinstalar (PowerShell como administrador):
+    C:\Sysmon\Sysmon64.exe -c C:\Sysmon\sysmonconfig.xml
+-->
+<RuleGroup name="" groupRelation="or">
+  <FileCreate onmatch="include">
+    <TargetFilename name="UC05 ransomware extension" condition="end with">.locked</TargetFilename>
+  </FileCreate>
+</RuleGroup>

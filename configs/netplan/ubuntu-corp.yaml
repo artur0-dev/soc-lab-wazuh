@@ -1,0 +1,21 @@
+# /etc/netplan/50-cloud-init.yaml
+# Aplicar con: sudo netplan apply
+#
+# IMPORTANTE: la interfaz de la red del laboratorio (ens37) NO debe
+# tener gateway/routes definido. Si lo tiene, se genera una doble
+# ruta por defecto y se pierde la salida a internet por la NAT.
+# Ver docs/troubleshooting.md, punto 2.
+
+network:
+  version: 2
+  ethernets:
+    ens33:
+      dhcp4: true          # tarjeta NAT, salida a internet
+    ens37:
+      dhcp4: false          # tarjeta de la red del laboratorio
+      addresses:
+        - 192.168.58.140/24
+      nameservers:
+        addresses:
+          - 1.1.1.1
+          - 8.8.8.8

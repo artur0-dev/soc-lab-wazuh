@@ -1,0 +1,8 @@
+<!--
+  Fragmento a añadir en /var/ossec/etc/ossec.conf del sensor Suricata,
+  dentro de <ossec_config>, justo antes de </ossec_config>.
+-->
+<localfile>
+  <log_format>json</log_format>
+  <location>/var/log/suricata/eve.json</location>
+</localfile>

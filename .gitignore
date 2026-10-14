@@ -1,0 +1,20 @@
+# Credenciales y secretos
+.env
+*.key
+*.pem
+*.pfx
+client.keys
+**/client.keys
+
+# Backups de configuración generados durante el troubleshooting
+*.bak
+*.roto
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Paquetes descargados localmente (no forman parte del repo)
+*.deb
+*.msi
+*.zip

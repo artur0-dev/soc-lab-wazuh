@@ -1,0 +1,57 @@
+<!--
+  local_rules.xml de ejemplo — añadir en
+  /var/ossec/etc/rules/local_rules.xml (Manager) y reiniciar
+  wazuh-manager.
+
+  Objetivo: reducir el ruido de las alertas SecEdit/PowerShell que
+  genera el propio módulo SCA de Wazuh al auditar el sistema
+  (ver docs/use-cases/uc04-powershell-discovery.md).
+-->
+<group name="local,">
+
+  <rule id="100100" level="2">
+    <if_sid>92066</if_sid>
+    <field name="win.eventdata.parentCommandLine" type="pcre2">(?i)wazuh-modulesd|sca</field>
+    <description>SecEdit ejecutado por el módulo SCA de Wazuh (esperado, no es una intrusión)</description>
+    <group>false_positive,</group>
+  </rule>
+
+  <!--
+    Ejemplo de correlación: escalar a nivel alto si se repiten
+    varios logon failures (60122) del mismo usuario en poco tiempo.
+    Ajustar frequency/timeframe según el entorno.
+  -->
+  <rule id="100101" level="10" frequency="5" timeframe="60">
+    <if_matched_sid>60122</if_matched_sid>
+    <same_source_ip />
+    <description>Posible fuerza bruta contra Active Directory: múltiples logon failures desde el mismo origen</description>
+    <mitre>
+      <id>T1110.001</id>
+    </mitre>
+  </rule>
+
+</group>
+
+<!--
+  UC05 - Ransomware (T1486). Detecta la creación (Sysmon Event ID 11) de
+  archivos con extensiones típicas de ransomware.
+
+  IMPORTANTE: cuelga de la regla 61613 (Sysmon Event 11: FileCreate).
+  La 61603 es Event 1 (creación de proceso) y NO contiene el campo
+  targetFilename: la regla no dispara nunca. Ver docs/troubleshooting.md #8.
+
+  Requiere que Sysmon registre esos archivos:
+  configs/sysmon/sysmon-filecreate-ransomware.xml
+-->
+<group name="local,ransomware,">
+
+  <rule id="100111" level="14">
+    <if_sid>61613</if_sid>
+    <field name="win.eventdata.targetFilename" type="pcre2">(?i)\.(locked|encrypted|crypt|enc)$</field>
+    <description>Archivo con extensión asociada a ransomware creado: $(win.eventdata.targetFilename)</description>
+    <mitre>
+      <id>T1486</id>
+    </mitre>
+  </rule>
+
+</group>

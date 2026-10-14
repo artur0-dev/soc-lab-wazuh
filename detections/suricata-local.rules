@@ -1,0 +1,11 @@
+# local.rules — /var/lib/suricata/rules/local.rules
+# Regla de prueba para confirmar que el sensor ve tráfico y genera
+# alertas antes de depender de las reglas ET Open descargadas con
+# suricata-update.
+#
+# Debe estar referenciada en suricata.yaml:
+#   rule-files:
+#     - suricata.rules
+#     - local.rules
+
+alert icmp any any -> $HOME_NET any (msg:"LAB ICMP detectado"; sid:1000001; rev:1;)
